@@ -30,19 +30,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		257406DA2F8418CB000E1656 /* Bram's Grounding App */ = {
+		257406DA2F8418CB000E1656 /* Bram's Bounding App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Bram's Grounding App";
+			path = "Bram's Bounding App";
 			sourceTree = "<group>";
 		};
-		257406EA2F8418CE000E1656 /* Bram's Grounding AppTests */ = {
+		257406EA2F8418CE000E1656 /* Bram's Bounding AppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Bram's Grounding AppTests";
+			path = "Bram's Bounding AppTests";
 			sourceTree = "<group>";
 		};
-		257406F42F8418CE000E1656 /* Bram's Grounding AppUITests */ = {
+		257406F42F8418CE000E1656 /* Bram's Bounding AppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Bram's Grounding AppUITests";
+			path = "Bram's Bounding AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		257406CF2F8418CB000E1656 = {
 			isa = PBXGroup;
 			children = (
-				257406DA2F8418CB000E1656 /* Bram's Grounding App */,
-				257406EA2F8418CE000E1656 /* Bram's Grounding AppTests */,
-				257406F42F8418CE000E1656 /* Bram's Grounding AppUITests */,
+				257406DA2F8418CB000E1656 /* Bram's Bounding App */,
+				257406EA2F8418CE000E1656 /* Bram's Bounding AppTests */,
+				257406F42F8418CE000E1656 /* Bram's Bounding AppUITests */,
 				257406D92F8418CB000E1656 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				257406DA2F8418CB000E1656 /* Bram's Grounding App */,
+				257406DA2F8418CB000E1656 /* Bram's Bounding App */,
 			);
 			name = "Bram's Bounding App";
 			packageProductDependencies = (
@@ -131,7 +131,7 @@
 				257406E92F8418CE000E1656 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				257406EA2F8418CE000E1656 /* Bram's Grounding AppTests */,
+				257406EA2F8418CE000E1656 /* Bram's Bounding AppTests */,
 			);
 			name = "Bram's Bounding AppTests";
 			packageProductDependencies = (
@@ -154,7 +154,7 @@
 				257406F32F8418CE000E1656 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				257406F42F8418CE000E1656 /* Bram's Grounding AppUITests */,
+				257406F42F8418CE000E1656 /* Bram's Bounding AppUITests */,
 			);
 			name = "Bram's Bounding AppUITests";
 			packageProductDependencies = (
