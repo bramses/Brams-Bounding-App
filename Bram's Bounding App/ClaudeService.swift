@@ -84,19 +84,24 @@ enum ClaudeError: LocalizedError, Equatable {
 class ClaudeService {
     private let apiKey: String
     private let baseURL = "https://api.anthropic.com/v1/messages"
-    private let timeoutInterval: TimeInterval = 15
+    private let timeoutInterval: TimeInterval = 120
     
     init(apiKey: String) {
         self.apiKey = apiKey
     }
     
-    // Compress image to be under maxSizeMB
-    static func compressImage(_ image: UIImage, maxSizeMB: Double = 5.0) -> Data? {
+    // Compress image to be under the API's base64 size limit, fixing orientation first.
+    // The API limits base64 to 5MB. Base64 adds ~33% overhead, so we target 3.75MB raw.
+    static func compressImage(_ image: UIImage, maxSizeMB: Double = 3.75) -> Data? {
+        // Fix EXIF orientation before encoding — images from photo library
+        // may have non-up orientation that causes issues with base64 encoding
+        let oriented = image.fixedOrientation() ?? image
+        
         let maxBytes = Int(maxSizeMB * 1024 * 1024)
         var quality: CGFloat = 0.9
         
         while quality > 0.1 {
-            if let data = image.jpegData(compressionQuality: quality) {
+            if let data = oriented.jpegData(compressionQuality: quality) {
                 if data.count <= maxBytes {
                     return data
                 }
@@ -105,17 +110,17 @@ class ClaudeService {
         }
         
         // If still too large, resize the image
-        let scale = sqrt(Double(maxBytes) / Double(image.jpegData(compressionQuality: 0.1)?.count ?? maxBytes))
+        let scale = sqrt(Double(maxBytes) / Double(oriented.jpegData(compressionQuality: 0.1)?.count ?? maxBytes))
         if scale < 1 {
-            let newSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+            let newSize = CGSize(width: oriented.size.width * scale, height: oriented.size.height * scale)
             let renderer = UIGraphicsImageRenderer(size: newSize)
             let resized = renderer.image { _ in
-                image.draw(in: CGRect(origin: .zero, size: newSize))
+                oriented.draw(in: CGRect(origin: .zero, size: newSize))
             }
             return resized.jpegData(compressionQuality: 0.7)
         }
         
-        return image.jpegData(compressionQuality: 0.1)
+        return oriented.jpegData(compressionQuality: 0.1)
     }
     
     // Analyze image and detect circled/boxed regions
@@ -214,7 +219,7 @@ class ClaudeService {
         }
         
         guard httpResponse.statusCode == 200 else {
-            let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
+            let errorMessage = ClaudeService.parseAPIError(data: data, statusCode: httpResponse.statusCode)
             throw ClaudeError.apiError(httpResponse.statusCode, errorMessage)
         }
         
@@ -225,6 +230,17 @@ class ClaudeService {
         }
         
         return try parseBoundingBoxes(from: responseText)
+    }
+    
+    // Extract readable error message from API JSON response
+    private static func parseAPIError(data: Data, statusCode: Int) -> String {
+        // Try to extract the "message" field from {"type":"error","error":{"type":"...","message":"..."}}
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let errorObj = json["error"] as? [String: Any],
+           let message = errorObj["message"] as? String {
+            return message
+        }
+        return String(data: data, encoding: .utf8) ?? "Unknown error"
     }
     
     // Parse JSON response from Claude to extract bounding boxes

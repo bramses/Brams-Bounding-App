@@ -309,7 +309,8 @@ struct FeedView: View {
                 extractedText: detectedBox.extractedText
             )
             box.page = newPage
-            newPage.boundingBoxes.append(box)
+            if newPage.boundingBoxes == nil { newPage.boundingBoxes = [] }
+            newPage.boundingBoxes?.append(box)
             modelContext.insert(box)
         }
         
@@ -318,7 +319,7 @@ struct FeedView: View {
         do {
             try modelContext.save()
             // Pre-compute embeddings for the new boxes in the background
-            EmbeddingCache.shared.precomputeAsync(for: newPage.boundingBoxes)
+            EmbeddingCache.shared.precomputeAsync(for: newPage.boundingBoxes ?? [])
         } catch {
             errorMessage = "Failed to save photo: \(error.localizedDescription)"
         }
@@ -331,7 +332,7 @@ struct FeedView: View {
     private func deletePage(_ page: SavedPage) {
         withAnimation {
             // Clear cached embeddings for deleted boxes
-            for box in page.boundingBoxes {
+            for box in page.boundingBoxes ?? [] {
                 EmbeddingCache.shared.remove(for: box.id)
             }
             modelContext.delete(page)
@@ -364,7 +365,7 @@ struct PageCardView: View {
                 // Page info
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Label("\(page.boundingBoxes.count) sections", systemImage: "square.on.circle")
+                        Label("\((page.boundingBoxes ?? []).count) sections", systemImage: "square.on.circle")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         
@@ -376,7 +377,7 @@ struct PageCardView: View {
                     }
                     
                     // Preview of first bounding box
-                    if let firstBox = page.boundingBoxes.first {
+                    if let firstBox = page.boundingBoxes?.first {
                         Text(firstBox.extractedText)
                             .font(.body)
                             .lineLimit(2)

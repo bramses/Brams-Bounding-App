@@ -106,7 +106,7 @@ struct GalleryView: View {
     
     private func deletePage(_ page: SavedPage) {
         withAnimation {
-            for box in page.boundingBoxes {
+            for box in page.boundingBoxes ?? [] {
                 EmbeddingCache.shared.remove(for: box.id)
             }
             modelContext.delete(page)
@@ -132,8 +132,8 @@ struct GalleryThumbnail: View {
         }
         .aspectRatio(1, contentMode: .fit)
         .overlay(alignment: .bottomTrailing) {
-            if page.boundingBoxes.count > 0 {
-                Text("\(page.boundingBoxes.count)")
+            if (page.boundingBoxes ?? []).count > 0 {
+                Text("\((page.boundingBoxes ?? []).count)")
                     .font(.caption2.weight(.bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 6)

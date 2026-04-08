@@ -6,5 +6,9 @@
 	<string>We need access to your camera to take photos of handwritten pages with circled sections.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to select images for analysis.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

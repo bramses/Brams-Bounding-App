@@ -102,16 +102,13 @@ struct ContentView: View {
                 Text(errorMessage)
             }
         }
-        .alert("Failed Images", isPresented: $showingFailedQueue) {
-            Button("Retry All") {
-                retryAllFailed()
-            }
-            Button("Discard All", role: .destructive) {
-                failedImages.removeAll()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("\(failedImages.count) image(s) failed to process. Would you like to retry?")
+        .sheet(isPresented: $showingFailedQueue) {
+            FailedQueueView(
+                failedImages: $failedImages,
+                onRetry: { failedImage in
+                    retrySingle(failedImage)
+                }
+            )
         }
         .overlay {
             if isProcessing {
@@ -164,6 +161,8 @@ struct ContentView: View {
     }
     
     private func processNextInQueue() {
+        // Don't process next if review is showing
+        guard !showingReview else { return }
         guard !imageQueue.isEmpty else { return }
         let next = imageQueue.removeFirst()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -197,7 +196,7 @@ struct ContentView: View {
                 }
             } catch let error as ClaudeError where error == .timeout {
                 await MainActor.run {
-                    failedImages.append(FailedImage(image: image, error: "Timed out"))
+                    failedImages.append(FailedImage(image: image, error: "Request timed out. Check your connection and try again."))
                     isProcessing = false
                     processNextInQueue()
                 }
@@ -211,10 +210,20 @@ struct ContentView: View {
         }
     }
     
-    private func retryAllFailed() {
-        let imagesToRetry = failedImages.map { $0.image }
-        failedImages.removeAll()
-        processMultipleImages(imagesToRetry)
+    // Retry a single failed image — processes it through the normal flow
+    private func retrySingle(_ failedImage: FailedImage) {
+        // Don't retry while reviewing or processing
+        guard !showingReview && !isProcessing else {
+            errorMessage = "Please finish reviewing the current photo first."
+            return
+        }
+        
+        failedImages.removeAll { $0.id == failedImage.id }
+        showingFailedQueue = false
+        // Small delay to let sheet dismiss before processing
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            processImage(failedImage.image)
+        }
     }
     
     private func saveReviewedBoxes(image: UIImage, boxes: [DetectedBoundingBox]) {
@@ -234,7 +243,8 @@ struct ContentView: View {
                 extractedText: detectedBox.extractedText
             )
             box.page = newPage
-            newPage.boundingBoxes.append(box)
+            if newPage.boundingBoxes == nil { newPage.boundingBoxes = [] }
+            newPage.boundingBoxes?.append(box)
             modelContext.insert(box)
         }
         
@@ -242,7 +252,7 @@ struct ContentView: View {
         
         do {
             try modelContext.save()
-            EmbeddingCache.shared.precomputeAsync(for: newPage.boundingBoxes)
+            EmbeddingCache.shared.precomputeAsync(for: newPage.boundingBoxes ?? [])
         } catch {
             errorMessage = "Failed to save photo: \(error.localizedDescription)"
         }
@@ -255,12 +265,104 @@ struct ContentView: View {
         let snapshots = pages.map { page in
             PageThumbnailSnapshot(
                 imageData: page.imageData,
-                boxes: page.boundingBoxes.map { box in
+                boxes: (page.boundingBoxes ?? []).map { box in
                     BoxThumbnailSnapshot(id: box.id, x: box.x, y: box.y, width: box.width, height: box.height)
                 }
             )
         }
         await ThumbnailCache.shared.preloadAll(pageSnapshots: snapshots)
+    }
+}
+
+// MARK: - Failed Queue View
+
+struct FailedQueueView: View {
+    @Binding var failedImages: [FailedImage]
+    let onRetry: (FailedImage) -> Void
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            Group {
+                if failedImages.isEmpty {
+                    ContentUnavailableView(
+                        "No Failed Images",
+                        systemImage: "checkmark.circle",
+                        description: Text("All images processed successfully")
+                    )
+                } else {
+                    List {
+                        ForEach(failedImages) { item in
+                            FailedImageRow(
+                                item: item,
+                                onRetry: {
+                                    onRetry(item)
+                                }
+                            )
+                        }
+                        .onDelete { offsets in
+                            failedImages.remove(atOffsets: offsets)
+                        }
+                        
+                        Section {
+                            Button(role: .destructive) {
+                                failedImages.removeAll()
+                            } label: {
+                                Label("Discard All", systemImage: "trash")
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Failed Images (\(failedImages.count))")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct FailedImageRow: View {
+    let item: FailedImage
+    let onRetry: () -> Void
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Thumbnail of the failed image
+            Image(uiImage: item.image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 60, height: 60)
+                .cornerRadius(8)
+                .clipped()
+            
+            // Error details
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Analysis Failed")
+                    .font(.subheadline.weight(.semibold))
+                
+                Text(item.error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .lineLimit(10)
+            }
+            
+            Spacer()
+            
+            // Retry button
+            Button(action: onRetry) {
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.accentColor)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.vertical, 4)
     }
 }
 

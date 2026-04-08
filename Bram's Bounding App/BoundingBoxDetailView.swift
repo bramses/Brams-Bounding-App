@@ -8,166 +8,175 @@
 import SwiftUI
 import SwiftData
 
+// Outer wrapper that owns the NavigationStack — presented as a sheet
 struct BoundingBoxDetailView: View {
     let boundingBox: BoundingBox
     @Environment(\.dismiss) private var dismiss
+    @State private var path: [BoundingBox] = []
+    
+    var body: some View {
+        NavigationStack(path: $path) {
+            BoundingBoxDetailContent(boundingBox: boundingBox, path: $path)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") { dismiss() }
+                    }
+                }
+                .navigationDestination(for: BoundingBox.self) { box in
+                    BoundingBoxDetailContent(boundingBox: box, path: $path)
+                }
+        }
+    }
+}
+
+// Reusable content view used for both the root and pushed destinations
+struct BoundingBoxDetailContent: View {
+    let boundingBox: BoundingBox
+    @Binding var path: [BoundingBox]
     @Environment(\.modelContext) private var modelContext
     @Query private var allPages: [SavedPage]
     @State private var showingFullPage = false
     @State private var similarItems: [SimilarItem] = []
-    @State private var selectedSimilarBox: BoundingBox?
     @State private var isLoadingSimilar = true
     @State private var showingShareSheet = false
     
     private var allBoxes: [BoundingBox] {
-        allPages.flatMap { $0.boundingBoxes }
+        allPages.flatMap { $0.boundingBoxes ?? [] }
     }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Show cropped image section if available
-                    if let page = boundingBox.page,
-                       let image = page.image {
-                        croppedImageView(from: image)
-                            .frame(maxHeight: 400)
-                            .cornerRadius(12)
-                            .shadow(radius: 4)
-                    }
+        ScrollView {
+            VStack(spacing: 20) {
+                // Show cropped image section if available
+                if let page = boundingBox.page,
+                   let image = page.image {
+                    croppedImageView(from: image)
+                        .frame(maxHeight: 400)
+                        .cornerRadius(12)
+                        .shadow(radius: 4)
+                }
+                
+                // Extracted text content
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Extracted Content")
+                        .font(.headline)
                     
-                    // Extracted text content
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Extracted Content")
-                            .font(.headline)
-                        
-                        Text(boundingBox.extractedText)
-                            .font(.body)
-                            .textSelection(.enabled)
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                    }
-                    .padding(.horizontal)
+                    Text(boundingBox.extractedText)
+                        .font(.body)
+                        .textSelection(.enabled)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                }
+                .padding(.horizontal)
+                
+                // Metadata
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Details")
+                        .font(.headline)
                     
-                    // Metadata
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Details")
-                            .font(.headline)
-                        
-                        HStack {
-                            Text("Date:")
-                                .foregroundStyle(.secondary)
-                            Text(boundingBox.timestamp, style: .date)
-                            Text(boundingBox.timestamp, style: .time)
-                        }
-                        .font(.subheadline)
+                    HStack {
+                        Text("Date:")
+                            .foregroundStyle(.secondary)
+                        Text(boundingBox.timestamp, style: .date)
+                        Text(boundingBox.timestamp, style: .time)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    
-                    // Action buttons row
-                    HStack(spacing: 12) {
-                        // See full page
-                        if boundingBox.page != nil {
-                            Button(action: {
-                                showingFullPage = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "doc.text.magnifyingglass")
-                                    Text("Full Photo")
-                                }
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.accentColor)
-                                .cornerRadius(10)
+                    .font(.subheadline)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+                
+                // Action buttons row
+                HStack(spacing: 12) {
+                    // See full page
+                    if boundingBox.page != nil {
+                        Button(action: {
+                            showingFullPage = true
+                        }) {
+                            HStack {
+                                Image(systemName: "doc.text.magnifyingglass")
+                                Text("Full Photo")
                             }
-                        }
-                        
-                        // Share original image
-                        if boundingBox.page?.image != nil {
-                            Button(action: {
-                                showingShareSheet = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "square.and.arrow.up")
-                                    Text("Share")
-                                }
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.green)
-                                .cornerRadius(10)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    // Similar items section
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Similar Sections")
-                            .font(.headline)
-                            .padding(.horizontal)
-                        
-                        if isLoadingSimilar {
-                            HStack(spacing: 12) {
-                                ProgressView()
-                                Text("Finding similar content...")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                        } else if similarItems.isEmpty {
-                            Text("No similar sections found")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                        } else {
-                            ForEach(similarItems, id: \.box.id) { item in
-                                Button {
-                                    selectedSimilarBox = item.box
-                                } label: {
-                                    SimilarItemRow(item: item)
-                                }
-                            }
+                            .background(Color.accentColor)
+                            .cornerRadius(10)
                         }
                     }
                     
-                    Spacer()
-                }
-                .padding(.vertical)
-            }
-            .navigationTitle("Saved Section")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") {
-                        dismiss()
+                    // Share original image
+                    if boundingBox.page?.image != nil {
+                        Button(action: {
+                            showingShareSheet = true
+                        }) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                Text("Share")
+                            }
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(10)
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $showingFullPage) {
-                if let page = boundingBox.page {
-                    FullPageView(page: page, highlightedBox: boundingBox)
+                .padding(.horizontal)
+                
+                // Similar items section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Similar Sections")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    if isLoadingSimilar {
+                        HStack(spacing: 12) {
+                            ProgressView()
+                            Text("Finding similar content...")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                    } else if similarItems.isEmpty {
+                        Text("No similar sections found")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    } else {
+                        ForEach(similarItems, id: \.box.id) { item in
+                            Button {
+                                path.append(item.box)
+                            } label: {
+                                SimilarItemRow(item: item)
+                            }
+                        }
+                    }
                 }
+                
+                Spacer()
             }
-            .sheet(item: $selectedSimilarBox) { box in
-                BoundingBoxDetailView(boundingBox: box)
+            .padding(.vertical)
+        }
+        .navigationTitle("Saved Section")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingFullPage) {
+            if let page = boundingBox.page {
+                FullPageView(page: page, highlightedBox: boundingBox)
             }
-            .sheet(isPresented: $showingShareSheet) {
-                if let image = boundingBox.page?.image {
-                    ShareSheet(items: [image])
-                }
+        }
+        .sheet(isPresented: $showingShareSheet) {
+            if let image = boundingBox.page?.image {
+                ShareSheet(items: [image])
             }
-            .onAppear {
-                computeSimilarItems()
-            }
+        }
+        .onAppear {
+            computeSimilarItems()
         }
     }
     
@@ -200,7 +209,6 @@ struct BoundingBoxDetailView: View {
     
     // Crop UIImage to bounding box coordinates
     private func cropImage(_ image: UIImage, to box: BoundingBox) -> UIImage? {
-        // Convert UIImage to proper orientation first
         guard let orientedImage = image.fixedOrientation() else {
             return nil
         }
@@ -211,7 +219,6 @@ struct BoundingBoxDetailView: View {
         
         let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
         
-        // Calculate crop rectangle using normalized coordinates
         let rect = CGRect(
             x: box.x * imageSize.width,
             y: box.y * imageSize.height,
@@ -219,11 +226,7 @@ struct BoundingBoxDetailView: View {
             height: box.height * imageSize.height
         )
         
-        print("Cropping image - Image size: \(imageSize), Box: x=\(box.x), y=\(box.y), w=\(box.width), h=\(box.height)")
-        print("Crop rect: \(rect)")
-        
         guard let croppedCGImage = cgImage.cropping(to: rect) else {
-            print("Failed to crop image")
             return nil
         }
         

@@ -24,7 +24,7 @@ struct FullPageView: View {
                     if let image = page.image {
                         ImageWithBoundingBoxes(
                             image: image,
-                            boundingBoxes: page.boundingBoxes,
+                            boundingBoxes: page.boundingBoxes ?? [],
                             highlightedBox: highlightedBox,
                             containerWidth: geometry.size.width,
                             isEditMode: isEditMode,
@@ -92,8 +92,9 @@ struct ImageWithBoundingBoxes: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 
-                // Draw bounding boxes relative to the actual rendered image
-                ForEach(boundingBoxes, id: \.id) { box in
+                // Draw bounding boxes sorted largest-first so smaller boxes
+                // render on top and are easier to tap
+                ForEach(boundingBoxes.sorted { ($0.width * $0.height) > ($1.width * $1.height) }, id: \.id) { box in
                     if isEditMode {
                         DraggableBoundingBox(
                             box: box,

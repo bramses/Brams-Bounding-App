@@ -21,7 +21,7 @@ struct SearchView: View {
     
     // Filter bounding boxes based on search text
     private var filteredBoxes: [BoundingBox] {
-        let allBoxes = allPages.flatMap { $0.boundingBoxes }
+        let allBoxes = allPages.flatMap { $0.boundingBoxes ?? [] }
         
         if searchText.isEmpty {
             return allBoxes.sorted { $0.timestamp > $1.timestamp }
