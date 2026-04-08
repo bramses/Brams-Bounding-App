@@ -12,7 +12,8 @@ import SwiftData
 struct Bram_s_Grounding_AppApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            SavedPage.self,
+            BoundingBox.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
