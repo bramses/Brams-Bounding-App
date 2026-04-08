@@ -24,9 +24,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		257406D82F8418CB000E1656 /* Bram's Grounding App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bram's Grounding App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		257406E72F8418CE000E1656 /* Bram's Grounding AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bram's Grounding AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		257406F12F8418CE000E1656 /* Bram's Grounding AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bram's Grounding AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		257406D82F8418CB000E1656 /* Bram's Bounding App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bram's Bounding App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		257406E72F8418CE000E1656 /* Bram's Bounding AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bram's Bounding AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		257406F12F8418CE000E1656 /* Bram's Bounding AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bram's Bounding AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,9 +85,9 @@
 		257406D92F8418CB000E1656 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				257406D82F8418CB000E1656 /* Bram's Grounding App.app */,
-				257406E72F8418CE000E1656 /* Bram's Grounding AppTests.xctest */,
-				257406F12F8418CE000E1656 /* Bram's Grounding AppUITests.xctest */,
+				257406D82F8418CB000E1656 /* Bram's Bounding App.app */,
+				257406E72F8418CE000E1656 /* Bram's Bounding AppTests.xctest */,
+				257406F12F8418CE000E1656 /* Bram's Bounding AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		257406D72F8418CB000E1656 /* Bram's Grounding App */ = {
+		257406D72F8418CB000E1656 /* Bram's Bounding App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 257406FB2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding App" */;
+			buildConfigurationList = 257406FB2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding App" */;
 			buildPhases = (
 				257406D42F8418CB000E1656 /* Sources */,
 				257406D52F8418CB000E1656 /* Frameworks */,
@@ -110,16 +110,16 @@
 			fileSystemSynchronizedGroups = (
 				257406DA2F8418CB000E1656 /* Bram's Grounding App */,
 			);
-			name = "Bram's Grounding App";
+			name = "Bram's Bounding App";
 			packageProductDependencies = (
 			);
 			productName = "Bram's Grounding App";
-			productReference = 257406D82F8418CB000E1656 /* Bram's Grounding App.app */;
+			productReference = 257406D82F8418CB000E1656 /* Bram's Bounding App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		257406E62F8418CE000E1656 /* Bram's Grounding AppTests */ = {
+		257406E62F8418CE000E1656 /* Bram's Bounding AppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 257406FE2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding AppTests" */;
+			buildConfigurationList = 257406FE2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding AppTests" */;
 			buildPhases = (
 				257406E32F8418CE000E1656 /* Sources */,
 				257406E42F8418CE000E1656 /* Frameworks */,
@@ -133,16 +133,16 @@
 			fileSystemSynchronizedGroups = (
 				257406EA2F8418CE000E1656 /* Bram's Grounding AppTests */,
 			);
-			name = "Bram's Grounding AppTests";
+			name = "Bram's Bounding AppTests";
 			packageProductDependencies = (
 			);
 			productName = "Bram's Grounding AppTests";
-			productReference = 257406E72F8418CE000E1656 /* Bram's Grounding AppTests.xctest */;
+			productReference = 257406E72F8418CE000E1656 /* Bram's Bounding AppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		257406F02F8418CE000E1656 /* Bram's Grounding AppUITests */ = {
+		257406F02F8418CE000E1656 /* Bram's Bounding AppUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 257407012F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding AppUITests" */;
+			buildConfigurationList = 257407012F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding AppUITests" */;
 			buildPhases = (
 				257406ED2F8418CE000E1656 /* Sources */,
 				257406EE2F8418CE000E1656 /* Frameworks */,
@@ -156,11 +156,11 @@
 			fileSystemSynchronizedGroups = (
 				257406F42F8418CE000E1656 /* Bram's Grounding AppUITests */,
 			);
-			name = "Bram's Grounding AppUITests";
+			name = "Bram's Bounding AppUITests";
 			packageProductDependencies = (
 			);
 			productName = "Bram's Grounding AppUITests";
-			productReference = 257406F12F8418CE000E1656 /* Bram's Grounding AppUITests.xctest */;
+			productReference = 257406F12F8418CE000E1656 /* Bram's Bounding AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 257406D32F8418CB000E1656 /* Build configuration list for PBXProject "Bram's Grounding App" */;
+			buildConfigurationList = 257406D32F8418CB000E1656 /* Build configuration list for PBXProject "Bram's Bounding App" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				257406D72F8418CB000E1656 /* Bram's Grounding App */,
-				257406E62F8418CE000E1656 /* Bram's Grounding AppTests */,
-				257406F02F8418CE000E1656 /* Bram's Grounding AppUITests */,
+				257406D72F8418CB000E1656 /* Bram's Bounding App */,
+				257406E62F8418CE000E1656 /* Bram's Bounding AppTests */,
+				257406F02F8418CE000E1656 /* Bram's Bounding AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		257406E92F8418CE000E1656 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 257406D72F8418CB000E1656 /* Bram's Grounding App */;
+			target = 257406D72F8418CB000E1656 /* Bram's Bounding App */;
 			targetProxy = 257406E82F8418CE000E1656 /* PBXContainerItemProxy */;
 		};
 		257406F32F8418CE000E1656 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 257406D72F8418CB000E1656 /* Bram's Grounding App */;
+			target = 257406D72F8418CB000E1656 /* Bram's Bounding App */;
 			targetProxy = 257406F22F8418CE000E1656 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -480,7 +480,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bram's Grounding App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bram's Grounding App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bram's Bounding App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bram's Bounding App";
 			};
 			name = Debug;
 		};
@@ -502,7 +502,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bram's Grounding App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bram's Grounding App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bram's Bounding App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Bram's Bounding App";
 			};
 			name = Release;
 		};
@@ -549,7 +549,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		257406D32F8418CB000E1656 /* Build configuration list for PBXProject "Bram's Grounding App" */ = {
+		257406D32F8418CB000E1656 /* Build configuration list for PBXProject "Bram's Bounding App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				257406F92F8418CE000E1656 /* Debug */,
@@ -558,7 +558,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		257406FB2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding App" */ = {
+		257406FB2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				257406FC2F8418CE000E1656 /* Debug */,
@@ -567,7 +567,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		257406FE2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding AppTests" */ = {
+		257406FE2F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding AppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				257406FF2F8418CE000E1656 /* Debug */,
@@ -576,7 +576,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		257407012F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Grounding AppUITests" */ = {
+		257407012F8418CE000E1656 /* Build configuration list for PBXNativeTarget "Bram's Bounding AppUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				257407022F8418CE000E1656 /* Debug */,
