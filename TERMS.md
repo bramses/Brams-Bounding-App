@@ -9,7 +9,7 @@ By downloading, installing, or using Bram's Bounding App ("the App"), you agree 
 
 ## Description of Service
 
-The App allows you to photograph or select images, analyze them using the Claude AI API to detect and extract regions of interest, and save the results locally on your device for searching and reference.
+The App allows you to photograph or select images, analyze them using the Claude AI API to detect and extract regions of interest, and save the results on your device for searching and reference. The App also supports syncing your data across your devices via Apple's iCloud (CloudKit).
 
 ## Your Responsibilities
 
@@ -41,14 +41,17 @@ AI-generated results may contain errors. You should verify any extracted text or
 
 To the maximum extent permitted by law, the developer shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the App, including but not limited to:
 
-- Loss of data
+- Loss of data (including iCloud sync failures)
 - API charges incurred through use of the App
 - Inaccurate AI analysis results
-- Device storage issues
+- Device storage or iCloud storage issues
 
 ## Third-Party Services
 
-The App integrates with Anthropic's Claude API. Your use of this service is subject to Anthropic's own terms and conditions. The developer is not responsible for the availability, performance, or policies of Anthropic's services.
+The App integrates with the following third-party services:
+
+- **Anthropic Claude API**: Used for image analysis. Your use of this service is subject to Anthropic's own terms and conditions. The developer is not responsible for the availability, performance, or policies of Anthropic's services.
+- **Apple iCloud (CloudKit)**: Used to sync your photos and bounding boxes across your devices. Your data is stored in your private iCloud container and is subject to Apple's iCloud terms and conditions. The developer does not have access to your iCloud data.
 
 ## Intellectual Property
 

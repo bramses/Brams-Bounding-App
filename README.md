@@ -22,8 +22,9 @@ An iOS app that uses Claude AI to analyze photos and extract salient regions (ci
 - **Semantic Similarity**: Uses Apple's NLEmbedding to find similar sections across your library
 - **Full Photo View**: See the original photo with all bounding boxes highlighted, with edit mode for repositioning
 - **Share/Export**: Share original photos directly from the app
+- **iCloud Sync**: Automatically syncs your photos and bounding boxes across all your iCloud devices via CloudKit
 - **Retry Queue**: Failed analyses are queued with retry support
-- **Image Compression**: Automatically compresses large images (>5MB) before sending to the API
+- **Image Compression**: Automatically compresses large images before sending to the API
 
 ## Setup
 
@@ -65,6 +66,7 @@ An iOS app that uses Claude AI to analyze photos and extract salient regions (ci
 ## Architecture
 
 - **SwiftUI** with **SwiftData** for persistence
+- **CloudKit** for iCloud sync across devices
 - **Claude API** (claude-opus-4-6) for image analysis
 - **NLEmbedding** for semantic similarity search
 - **PhotosUI** for multi-photo selection
@@ -84,5 +86,5 @@ An iOS app that uses Claude AI to analyze photos and extract salient regions (ci
 
 - Your API key is stored on-device using AppStorage
 - Images are only sent to Claude AI during analysis
-- No data is stored on external servers except during API calls
+- iCloud sync uses Apple's CloudKit — your data is stored in your private iCloud container and is never accessible to the developer
 - All similarity computations run on-device using Apple's NLEmbedding

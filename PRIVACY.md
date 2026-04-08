@@ -5,7 +5,7 @@ Last updated: April 8, 2026
 
 ## Overview
 
-Bram's Bounding App ("the App") is designed with privacy in mind. All data is stored locally on your device. The only external communication occurs when you choose to analyze an image using the Claude AI service.
+Bram's Bounding App ("the App") is designed with privacy in mind. Your data is stored on your device and optionally synced across your devices via iCloud. The only external communication with a non-Apple service occurs when you choose to analyze an image using the Claude AI service.
 
 ## Data Collection
 
@@ -13,12 +13,14 @@ Bram's Bounding App ("the App") is designed with privacy in mind. All data is st
 
 ## Data Storage
 
-All data is stored locally on your device using Apple's SwiftData framework:
+Data is stored on your device using Apple's SwiftData framework and optionally synced across your devices via Apple's CloudKit (iCloud):
 
-- **Photos**: Images you capture or select are stored on-device only.
-- **Bounding Boxes**: Extracted text and coordinates are stored on-device only.
-- **API Key**: Your Claude API key is stored on-device using Apple's AppStorage. It is never transmitted to any server other than Anthropic's API.
+- **Photos**: Images you capture or select are stored on-device and synced to your private iCloud container.
+- **Bounding Boxes**: Extracted text and coordinates are stored on-device and synced to your private iCloud container.
+- **API Key**: Your Claude API key is stored on-device using Apple's AppStorage. It is never transmitted to any server other than Anthropic's API and is not synced via iCloud.
 - **Embeddings**: Semantic similarity vectors are computed and cached on-device using Apple's NLEmbedding framework.
+
+iCloud sync uses Apple's CloudKit private database. Your synced data is stored in your personal iCloud account and is never accessible to the developer or any third party.
 
 ## Third-Party Services
 
@@ -41,7 +43,7 @@ The App requests access to your device's camera and photo library solely to capt
 
 The App does **not**:
 
-- Share data with third parties (other than Anthropic API calls you initiate)
+- Share data with third parties (other than Anthropic API calls you initiate and Apple iCloud sync)
 - Include advertising or ad tracking
 - Use analytics or crash reporting services
 - Transmit data to any server owned or operated by the developer
@@ -51,7 +53,8 @@ The App does **not**:
 All data can be deleted at any time by:
 
 - Deleting individual photos within the App
-- Deleting the App from your device, which removes all associated data
+- Deleting the App from your device, which removes all local data
+- Managing your iCloud storage through iOS Settings to remove synced data
 
 ## Children's Privacy
 

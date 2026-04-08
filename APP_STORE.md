@@ -39,23 +39,24 @@ KEY FEATURES
 - Edit Mode: Drag and resize bounding boxes directly on the full photo view
 - Share & Export: Share original photos with one tap
 - Retry Queue: If an analysis fails, it's automatically queued for retry
-- 100% Local Storage: All your data stays on your device. No accounts, no cloud sync, no tracking.
+- iCloud Sync: Your photos and bounding boxes automatically sync across all your iCloud devices
+- Private by Design: Your data is stored on your device and in your private iCloud container. No accounts, no tracking.
 
 PRIVACY FIRST
 
-Your photos and extracted content never leave your device except during Claude AI analysis (which you initiate). There are no user accounts, no analytics, no ads, and no data collection. You provide your own Claude API key — we never see it.
+Your photos and extracted content are stored on your device and synced through your private iCloud container — only you can access them. The only external communication is Claude AI analysis (which you initiate). There are no user accounts, no analytics, no ads, and no data collection. You provide your own Claude API key — we never see it.
 
 Requires a Claude API key from Anthropic (https://console.anthropic.com). API usage costs are determined by your Anthropic account.
 
 ## Keywords (100 chars max)
-AI,bounding box,OCR,photo,search,Claude,extract,handwriting,notes,regions
+AI,bounding box,OCR,photo,search,Claude,extract,handwriting,iCloud,sync
 
 ## Category
 Primary: Productivity
 Secondary: Photo & Video
 
 ## What's New (Version 1.0)
-Initial release! Analyze photos with Claude AI, detect and extract regions of interest, search your collection, and discover similar content with on-device semantic search.
+Initial release! Analyze photos with Claude AI, detect and extract regions of interest, search your collection, discover similar content with on-device semantic search, and sync everything across your devices with iCloud.
 
 ## Age Rating
 4+ (No objectionable content)
