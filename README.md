@@ -1,5 +1,12 @@
 <img src="https://github.com/bramses/Brams-Bounding-App/blob/main/Bram's%20Grounding%20App/Assets.xcassets/logo.imageset/logo.png" width="250" />
 
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 41" src="https://github.com/user-attachments/assets/2f1fa936-3947-46ad-b1ea-8512a4b923e9" />
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 37" src="https://github.com/user-attachments/assets/5ed12638-c2bf-4980-8627-ff71a6d077e0" />
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 22" src="https://github.com/user-attachments/assets/aedcc838-d872-48a3-849f-8528141a37e9" />
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 18" src="https://github.com/user-attachments/assets/f01d87aa-1642-447f-ab54-b56eb381e279" />
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 05" src="https://github.com/user-attachments/assets/42a242d5-dde3-4e17-8513-03d6f4217a63" />
+<img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 44 42" src="https://github.com/user-attachments/assets/5185b642-8b74-4bb9-bbd0-b58b9670123f" />
+
 
 # Bram's Bounding App
 
