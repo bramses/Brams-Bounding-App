@@ -36,11 +36,13 @@ struct ClaudeRequest: Codable {
     let model: String
     let maxTokens: Int
     let messages: [ClaudeMessage]
+    let stream: Bool?
     
     enum CodingKeys: String, CodingKey {
         case model
         case maxTokens = "max_tokens"
         case messages
+        case stream
     }
 }
 
@@ -123,8 +125,8 @@ class ClaudeService {
         return oriented.jpegData(compressionQuality: 0.1)
     }
     
-    // Analyze image and detect circled/boxed regions
-    func analyzePage(image: UIImage) async throws -> [DetectedBoundingBox] {
+    // Analyze image with streaming — calls onTextDelta with each chunk of text
+    func analyzePage(image: UIImage, onTextDelta: @escaping @Sendable (String) -> Void) async throws -> [DetectedBoundingBox] {
         guard let imageData = ClaudeService.compressImage(image) else {
             throw ClaudeError.imageConversionFailed
         }
@@ -194,7 +196,8 @@ class ClaudeService {
         let request = ClaudeRequest(
             model: "claude-opus-4-6",
             maxTokens: 4096,
-            messages: [message]
+            messages: [message],
+            stream: true
         )
         
         var urlRequest = URLRequest(url: URL(string: baseURL)!)
@@ -205,11 +208,10 @@ class ClaudeService {
         urlRequest.timeoutInterval = timeoutInterval
         urlRequest.httpBody = try JSONEncoder().encode(request)
         
-        let data: Data
-        let response: URLResponse
+        let (bytes, response): (URLSession.AsyncBytes, URLResponse)
         
         do {
-            (data, response) = try await URLSession.shared.data(for: urlRequest)
+            (bytes, response) = try await URLSession.shared.bytes(for: urlRequest)
         } catch let error as URLError where error.code == .timedOut {
             throw ClaudeError.timeout
         }
@@ -218,18 +220,51 @@ class ClaudeService {
             throw ClaudeError.invalidResponse
         }
         
+        // For non-200, collect the full body for error parsing
         guard httpResponse.statusCode == 200 else {
-            let errorMessage = ClaudeService.parseAPIError(data: data, statusCode: httpResponse.statusCode)
+            var errorData = Data()
+            for try await byte in bytes {
+                errorData.append(byte)
+            }
+            let errorMessage = ClaudeService.parseAPIError(data: errorData, statusCode: httpResponse.statusCode)
             throw ClaudeError.apiError(httpResponse.statusCode, errorMessage)
         }
         
-        let claudeResponse = try JSONDecoder().decode(ClaudeResponse.self, from: data)
+        // Parse SSE stream
+        var fullText = ""
+        var lineBuffer = ""
         
-        guard let responseText = claudeResponse.content.first?.text else {
+        for try await byte in bytes {
+            let char = Character(UnicodeScalar(byte))
+            if char == "\n" {
+                if lineBuffer.hasPrefix("data: ") {
+                    let jsonStr = String(lineBuffer.dropFirst(6))
+                    if let data = jsonStr.data(using: .utf8),
+                       let event = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        let eventType = event["type"] as? String ?? ""
+                        if eventType == "content_block_delta",
+                           let delta = event["delta"] as? [String: Any],
+                           let text = delta["text"] as? String {
+                            fullText += text
+                            onTextDelta(text)
+                        } else if eventType == "error",
+                                  let error = event["error"] as? [String: Any],
+                                  let message = error["message"] as? String {
+                            throw ClaudeError.apiError(0, message)
+                        }
+                    }
+                }
+                lineBuffer = ""
+            } else {
+                lineBuffer.append(char)
+            }
+        }
+        
+        guard !fullText.isEmpty else {
             throw ClaudeError.noContent
         }
         
-        return try parseBoundingBoxes(from: responseText)
+        return try parseBoundingBoxes(from: fullText)
     }
     
     // Extract readable error message from API JSON response

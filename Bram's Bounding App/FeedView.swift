@@ -254,7 +254,7 @@ struct FeedView: View {
         Task {
             do {
                 let claudeService = ClaudeService(apiKey: apiKey)
-                let boxes = try await claudeService.analyzePage(image: image)
+                let boxes = try await claudeService.analyzePage(image: image) { _ in }
                 
                 await MainActor.run {
                     isProcessing = false

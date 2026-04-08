@@ -27,6 +27,7 @@ struct ContentView: View {
     @State private var failedImages: [FailedImage] = []
     @State private var showingFailedQueue = false
     @State private var imageQueue: [UIImage] = []
+    @State private var streamingText = ""
     @AppStorage("claudeAPIKey") private var apiKey: String = ""
     
     var body: some View {
@@ -125,7 +126,7 @@ struct ContentView: View {
             Color.black.opacity(0.4)
                 .ignoresSafeArea()
             
-            VStack(spacing: 20) {
+            VStack(spacing: 16) {
                 ProgressView()
                     .scaleEffect(1.5)
                     .tint(.white)
@@ -134,8 +135,27 @@ struct ContentView: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
+                
+                if !streamingText.isEmpty {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            Text(streamingText)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.green)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .id("streamBottom")
+                        }
+                        .frame(maxHeight: 200)
+                        .onChange(of: streamingText) {
+                            withAnimation {
+                                proxy.scrollTo("streamBottom", anchor: .bottom)
+                            }
+                        }
+                    }
+                }
             }
-            .padding(40)
+            .padding(24)
+            .frame(maxWidth: 320)
             .background(Color(.systemGray6))
             .cornerRadius(20)
         }
@@ -172,6 +192,7 @@ struct ContentView: View {
     
     private func processImage(_ image: UIImage) {
         isProcessing = true
+        streamingText = ""
         let remaining = imageQueue.count
         processingStatus = remaining > 0
             ? "Analyzing image (\(remaining) more in queue)..."
@@ -180,7 +201,11 @@ struct ContentView: View {
         Task {
             do {
                 let claudeService = ClaudeService(apiKey: apiKey)
-                let boxes = try await claudeService.analyzePage(image: image)
+                let boxes = try await claudeService.analyzePage(image: image) { delta in
+                    Task { @MainActor in
+                        streamingText += delta
+                    }
+                }
                 
                 await MainActor.run {
                     isProcessing = false
