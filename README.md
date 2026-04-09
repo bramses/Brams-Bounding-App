@@ -1,4 +1,4 @@
-<img src="https://github.com/bramses/Brams-Bounding-App/blob/main/Bram's%20Grounding%20App/Assets.xcassets/logo.imageset/logo.png" width="250" />
+<img src="https://github.com/bramses/Brams-Bounding-App/blob/main/Bram's%20Bounding%20App/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="250" />
 
 <img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 41" src="https://github.com/user-attachments/assets/2f1fa936-3947-46ad-b1ea-8512a4b923e9" />
 <img width="200" alt="Simulator Screenshot - iPhone 16 Pro this - 2026-04-08 at 01 45 37" src="https://github.com/user-attachments/assets/5ed12638-c2bf-4980-8627-ff71a6d077e0" />
