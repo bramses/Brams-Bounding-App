@@ -14,6 +14,10 @@
 
 An iOS app that uses Claude AI to analyze photos and extract salient regions (circled sections, boxed areas, or notable objects) for easy searching and reference.
 
+  <a href="https://apps.apple.com/us/app/brams-bounding-app/id6761850044?itscg=30200&itsct=apps_box_badge&mttnsubad=6761850044" style="display: inline-block;">
+  <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1775692800" alt="Download on the App Store" style="width: 123px; height: 41px; vertical-align: middle; object-fit: contain;" />
+  </a>
+
 ## Features
 
 - **Multi-Photo Selection**: Take photos with the camera or select multiple from your library
