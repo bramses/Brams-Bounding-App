@@ -10,6 +10,8 @@
 
 # Bram's Bounding App
 
+[**VIDEO DEMO**](https://www.youtube.com/shorts/ScYjwsUK7NQ)
+
 An iOS app that uses Claude AI to analyze photos and extract salient regions (circled sections, boxed areas, or notable objects) for easy searching and reference.
 
 ## Features
